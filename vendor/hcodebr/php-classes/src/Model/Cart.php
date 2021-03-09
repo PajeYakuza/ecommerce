@@ -177,7 +177,7 @@ class Cart extends Model{
 
 		$totals = $this->getProductsTotals();
 
-		if($totals['nrqtd'] > 0){
+		if($totals['nrqtd'] > 0 && $nrzipcode != NULL){
 			if($totals['vlheight'] < 2) $totals['vlheight'] = 2;
 			if($totals['vllength'] < 16) $totals['vllength'] = 16;
 
@@ -218,7 +218,10 @@ class Cart extends Model{
 			return $result;
 
 		} else{
+			$this->setnrdays(0);
+			$this->setvlfreight(0.0);
 
+			$this->save();
 		}
 
 	}
@@ -274,8 +277,8 @@ class Cart extends Model{
 
 		$totals = $this->getProductsTotals();
 
-		$this->setvlsubtotal($totals['vlprice']);
-		$this->setvltotal($totals['vlprice'] + $this->getvlfreight());
+		$this->setvlsubtotal(($totals['vlprice'] != NULL) ? $totals['vlprice'] : 0.0);
+		$this->setvltotal((($totals['vlprice'] != NULL) ? $totals['vlprice'] : 0.0) + (($this->getvlfreight() != NULL) ? $this->getvlfreight() : 0.0));
 
 	}
 
